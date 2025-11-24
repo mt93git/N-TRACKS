@@ -1,0 +1,12 @@
+# N-TRACKS Safety Filter
+*.asv
+*.mat
+*.fig
+*.nd2
+*.tif
+*.tiff
+*.czi
+.Rproj.user
+.Rhistory
+.DS_Store
+/data/input_examples/*
