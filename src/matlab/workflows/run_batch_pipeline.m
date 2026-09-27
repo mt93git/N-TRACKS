@@ -17,12 +17,27 @@ function run_BATCH_workflow_v2()
     end
 
     clc; fprintf('===== STARTING ACME BATCH WORKFLOW v2 =====\n\n');
-    scripts_dir=fileparts(mfilename('fullpath')); addpath(scripts_dir);
-    output_dir='C:\MATLAB_Pipeline_Final_Checkpoint\03_output\BATCH_RUN_OUTPUT_v2'; % New output folder
+    scripts_dir = fileparts(mfilename('fullpath'));
+    addpath(scripts_dir);
+    
+    % Dynamic workspace discovery: locate data directories relative to repository root
+    repo_root = fileparts(fileparts(fileparts(scripts_dir)));
+    output_dir = fullfile(repo_root, 'data', 'output_examples');
     if ~exist(output_dir, 'dir'), mkdir(output_dir); end
 
-    nd2_file_list = {'C:\Users\mbt38\Downloads\ES_20251017_MR5734209_TL0259.nd2','C:\Users\mbt38\Downloads\ES_20251017_MR5734209.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251014\ES_20251014_Vehicle_PGE2.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251014\ES_20251014_TL0259_TL0259wPGE2.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251010\20251010\ES_20251010_TL0259_2nd_Acquisition.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251010\20251010\ES_20251010_PGE2.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251008\20251008_PGE2.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251008\20251008_TL0259.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251007\MR5728760.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251007\MR5728757.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251007\MR5728759.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251006\PGE2_2nd-Acquisition.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251006\LPS.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251006\PGE2.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251002\Vehicle_LPS.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251002\TL0259_TL0259wLPS.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251001\TL0259.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20251001\LPS.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20250930\LPS.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20250930\LTB4.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20250929\20250929_MR2452481006.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20250926\20250925_Human_PMN_LPS_002.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20250926\20250925_Human_PMN_LTB4_003.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20250924\20250924_Human_PMN_LPS_LTB4.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20250916\20250916_Human_PMN_Test_Processed.nd2','C:\Users\mbt38\Desktop\Era ND2 up to 251008\20250916\20250916_Human_PMN_Test.nd2'};
-    fprintf('Found %d ND2 files to process in batch mode.\n\n', numel(nd2_file_list));
+    % Scan raw_nd2 directory dynamically if present
+    raw_data_dir = fullfile(repo_root, 'data', 'raw_nd2');
+    if exist(raw_data_dir, 'dir')
+        nd2_entries = dir(fullfile(raw_data_dir, '*.nd2'));
+        nd2_file_list = fullfile(raw_data_dir, {nd2_entries.name});
+    else
+        % Default fallback list with anonymized research identifiers
+        nd2_file_list = { ...
+            fullfile(repo_root, 'data', 'demo_Donor_P1_Vehicle.nd2'), ...
+            fullfile(repo_root, 'data', 'demo_Donor_P1_LPS.nd2') ...
+        };
+    end
+    fprintf('Found %d ND2 files configured for batch mode.\n\n', numel(nd2_file_list));
     default_p=struct('thr',3.5,'minV',90,'maxV',1326,'minS',0.57);
     master_results_list = {};
 
