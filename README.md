@@ -1,49 +1,102 @@
 # N-TRACKS (v2.0)
 
-**N**eutrophil **T**racking & **R**ecognition **A**nalysis of **C**ell **K**inetics & **S**hape
+[![MATLAB Version](https://img.shields.io/badge/MATLAB-R2021b%2B-orange.svg)](https://www.mathworks.com/products/matlab.html)
+[![R Version](https://img.shields.io/badge/R-%3E%3D4.0.0-blue.svg)](https://www.r-project.org/)
+[![Bio-Formats](https://img.shields.io/badge/Bio--Formats-Integrated-green.svg)](https://www.openmicroscopy.org/bio-formats/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 1. Overview
-**N-TRACKS** is a hybrid computational pipeline designed to bridge the gap between high-content 4D imaging and single-cell transcriptomics. Built to process >10TB datasets, it integrates a robust MATLAB segmentation engine with an R-based multi-omics harmonization layer.
+**Neutrophil Tracking & Recognition Analysis of Cell Kinetics & Shape**
 
-**The Mission:**
-To move beyond simple cell counting and establish a direct link between *morphological behavior* (Motility, Sphericity) and *gene expression programs* (scRNA-seq clusters).
+> A hybrid computational framework engineered to bridge multi-terabyte 3D/4D confocal live-cell imaging and single-cell phenotypic profiling.  
+> Developed by **Maxence Tricaud** (Libreros Lab — Yale University / Université Laval).
 
-## 2. Architecture
+---
 
-### ?? The Engine (MATLAB)
-Located in src/matlab/:
-* **
-tracks_core_engine.m**: The primary algorithm. Uses modified watershed segmentation to detect low-contrast neutrophil boundaries in noisy biological environments.
-* **un_batch_pipeline.m**: An HPC-optimized wrapper allowing parallel processing of multiple experimental conditions.
-* **
-tracks_qc_gui.m**: A "Human-in-the-Loop" Quality Control interface for verifying segmentation masks before downstream analysis.
+## 1. Overview & Biological Mission
 
-### ?? The Bridge (R)
-Located in src/r_integration/:
-* **
-tracks_transcriptomic_integrator.R**: The handshake protocol. This script ingests morpho-kinetic data and maps it onto Seurat objects, enabling the discovery of "Fast-Mover" vs. "Arrested" transcriptomic states.
+**N-TRACKS** provides an end-to-end computational pipeline for high-throughput tracking and morphometric phenotyping of motile and resident leukocytes (neutrophils, macrophages) in noisy 3D confocal time-series (`.nd2`, `.tif`).
 
-## 3. Usage Strategy
+Beyond standard centroid tracking, **N-TRACKS** quantifies granular 3D morphological dynamics (sphericity variance, prolate/oblate aspect ratios, volume stability, directional tortuosity) to link spatial cellular behavior to downstream phenotypic programs.
 
-### Step A: Extraction (MATLAB)
-Run un_batch_pipeline.m to process raw .nd2 or .tif files. The system utilizes Bio-Formats to handle massive files without memory overflow.
+---
 
-### Step B: Validation (GUI)
-Launch 
-tracks_qc_gui.m to visualize random samples of the output. Flag and remove artifacts (debris, doublets) to ensure Ground Truth quality.
+## 2. Pipeline Architecture
 
-### Step C: Integration (R)
-Load your Seurat object and the N-TRACKS output CSV into 
-tracks_transcriptomic_integrator.R. The script will normalize the kinetic features and append them as metadata columns.
+```
+N-TRACKS/
+├── src/
+│   ├── matlab/
+│   │   ├── core/
+│   │   │   ├── ntracks_core_engine.m     # 3D watershed segmentation & Hungarian LAP assignment
+│   │   │   └── ntracks_stitcher.m        # Multi-tile and time-series track stitcher
+│   │   ├── gui/
+│   │   │   └── ntracks_qc_gui.m          # Human-in-the-loop quality control interface
+│   │   └── workflows/
+│   │       ├── run_batch_pipeline.m      # Automated headless batch processor
+│   │       └── run_qc_pipeline.m         # Automated QC verification harness
+│   └── r_integration/
+│       ├── ntracks_morphometric_profiler.R # 2200-line analytical Shiny dashboard
+│       └── ntracks_morphomics_app.R        # Modular phenotypic profiler
+├── data/
+│   └── output_examples/
+│       └── MASTER_Stitched_Harmonized_Sepsis_ACME.csv # Curated benchmark track dataset
+├── lib/
+│   └── bioformats_package.jar           # Dynamic Java bridge for Nikon ND2 microscopy
+├── install_ntracks_env.R                # Automated R dependency installer
+├── LICENSE                              # MIT Open-Source License
+└── README.md
+```
 
-## 4. Credits & Attribution
-**N-TRACKS** is an evolutionary fork of the **ACME** framework.
+---
 
-* **Original Algorithm:** Developed by [Miguel Palomino et al.](https://github.com/miguel55/ACME).
-* **v2.0 Integration & Architecture:** Developed by **Maxence Tricaud (Yale University)**.
-    * *Contribution:* Refactoring for HPC batch processing, development of the QC GUI, and creation of the R-based multi-omics integration layer.
+## 3. Algorithmic Principles
 
-## 5. Requirements
-* **MATLAB:** R2021b+ (Image Processing Toolbox)
-* **R:** v4.0+ (Seurat, Tidyverse)
-* **Dependencies:** Bio-Formats JAR (included in /lib)
+### A. 3D Boundary Extraction (Adaptive Watershed)
+Located in `src/matlab/core/ntracks_core_engine.m`:
+* Ingests multi-slice 3D Z-stacks via a dynamically loaded local **Bio-Formats** JVM bridge.
+* Applies multi-scale intensity thresholding with morphological gradient filtering and 3D distance-transform watershed to resolve overlapping cell boundaries in low signal-to-noise acquisitions.
+* Filters out imaging debris using physical volume constraints (`min_volume`, `max_volume`) and 3D sphericity cutoffs (`min_sphericity`).
+
+### B. Spatiotemporal Kinetic Tracking (Hungarian LAP)
+* Solves the global **Linear Assignment Problem (LAP)** across contiguous timeframes via the Kuhn-Munkres algorithm.
+* Handles cell entry/exit, transient occlusion, and motility shifts using a parameterized cost matrix (`costOfNonAssign = 20`).
+
+### C. Downstream Phenotypic Profiling (R / Shiny)
+Located in `src/r_integration/ntracks_morphometric_profiler.R`:
+* Integrates curated kinetic trajectories (`MASTER_Stitched_Harmonized_Sepsis_ACME.csv`) into a high-dimensional exploratory dashboard.
+* Extracts multi-condition velocity distributions, migration tortuosity, and elongation dynamics across experimental cohorts.
+
+---
+
+## 4. Quick Start Guide
+
+### Step 1: Install R Dependencies
+```R
+Rscript install_ntracks_env.R
+```
+
+### Step 2: Run Headless MATLAB Batch Processing
+Open MATLAB and execute:
+```matlab
+addpath(genpath('src/matlab'));
+run_batch_pipeline();
+```
+
+### Step 3: Launch Interactive Profiler
+In R / RStudio:
+```R
+shiny::runApp("src/r_integration/ntracks_morphometric_profiler.R")
+```
+
+---
+
+## 5. Credits & Attribution
+
+* **v2.0 Integration & Multi-Omics Architecture:** Maxence Tricaud (Yale University / Université Laval).
+* **Foundational Tracking Engine:** Derived and evolved from the ACME core framework ([Palomino et al.](https://github.com/miguel55/ACME)), substantially refactored for automated HPC batch execution, dynamic Bio-Formats self-loading, interactive QC GUI, and R phenotypic harmonization.
+
+---
+
+## 6. License
+
+Distributed under the **MIT License**. See `LICENSE` for full details.
