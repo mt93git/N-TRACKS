@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software in academic research, please cite it as below."
+authors:
+  - family-names: "Tricaud"
+    given-names: "Maxence"
+    affiliation: "Yale University / Université Laval"
+    email: "mtricaud.cetri@gmail.com"
+  - family-names: "Palomino"
+    given-names: "Miguel"
+    affiliation: "ACME Engine Foundation"
+  - name: "Libreros Lab"
+    affiliation: "Yale University School of Medicine"
+title: "N-TRACKS: Neutrophil Tracking & Recognition Analysis of Cell Kinetics & Shape"
+version: "2.0.0"
+date-released: 2025-11-24
+url: "https://github.com/mt93git/N-TRACKS"
+repository-code: "https://github.com/mt93git/N-TRACKS"
+license: "MIT"
+abstract: "Hybrid computational pipeline integrating 3D adaptive watershed segmentation, Kuhn-Munkres linear assignment problem (LAP) kinetic tracking, and R Shiny phenotypic morphometrics for multi-terabyte confocal live-cell imaging."
+keywords:
+  - "cell-tracking"
+  - "confocal-microscopy"
+  - "morphometrics"
+  - "matlab"
+  - "r-shiny"
+  - "neutrophils"
+  - "bioinformatics"
