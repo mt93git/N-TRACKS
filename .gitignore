@@ -11,3 +11,4 @@
 .DS_Store
 /data/input_examples/*
 lib/*.jar
+__pycache__/
