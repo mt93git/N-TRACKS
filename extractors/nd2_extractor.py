@@ -32,10 +32,11 @@ raw_nd2_dir = os.environ.get(
     os.path.join(project_root, "User_Downloaded_ND2_Folder")
 )
 if not os.path.exists(raw_nd2_dir):
-    # Secondary default search paths
+    # Portable fallback search paths
     fallback_paths = [
-        "/Users/mmt02/Library/CloudStorage/GoogleDrive-mtricaud.cetri@gmail.com/My Drive/Yale_Research_Hub/projects/active/2025_Neutrophil_Heterogeneity/src/pipeline/MATLAB_Pipeline_Final_Checkpoint/00_Refined_Reservoir_ND2",
-        os.path.join(project_root, "data", "raw_nd2")
+        os.path.join(project_root, "data", "raw_nd2"),
+        os.path.join(project_root, "data", "raw"),
+        os.path.join(project_root, "raw_nd2")
     ]
     for p in fallback_paths:
         if os.path.exists(p):
