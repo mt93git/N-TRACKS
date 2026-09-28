@@ -105,7 +105,23 @@ shiny::runApp("visualizers/ntracks_morphomics_app.R")
 
 ---
 
-## 5. Credits & Open-Source Attributions
+## 5. Software Architecture & Reproducibility Statement
+
+### Institutional Environment & Proprietary Tooling Rationale
+The upstream 3D confocal volumetric ingestion, adaptive distance-transform watershed segmentation, and initial Kuhn-Munkres bipartite matching were originally developed and calibrated within an institutional **MATLAB environment (R2021b+)**. This architecture was selected due to the laboratory's specialized microscope hardware integration and GPU-accelerated 3D Image Processing Toolboxes required for processing multi-gigabyte `.nd2` live-cell confocal acquisitions.
+
+### Open-Source Modularity & Downstream Accessibility
+Recognizing the commercial licensing barrier and reproducibility friction inherent to MATLAB, the **N-TRACKS** architecture was explicitly engineered as a **decoupled, modular ecosystem**:
+1. **Open Standard Data Exchange:** All segmented coordinate trajectories, frame-by-frame kinematics, and morphometric attributes are serialized into open, transparent tabular standards (`.csv`), validated against formal Pydantic schemas ([`schemas/`](schemas/)).
+2. **Autonomous Deep Learning Engine (100% Open-Source Python):** The spatiotemporal **3D-CNN + Bi-LSTM** displacement and state prediction models ([`models/cnn_lstm/`](models/cnn_lstm/)) operate entirely on standard **PyTorch**, executing independently without any MATLAB dependency.
+3. **Markovian Transition Suite (100% Open-Source R):** The Chapman-Kolmogorov validation, transition matrix estimation, and directed network graphs ([`r_markov/`](r_markov/)) run autonomously in standard **R**.
+4. **Interactive Morphometrics Dashboard (100% Open-Source R/Shiny):** Downstream cohort visualization and feature distribution inspection operate independently in R/Shiny.
+
+*Rather than superficially substituting an incomplete open-source wrapper over complex proprietary hardware drivers, N-TRACKS embraces transparency: commercial drivers are sequestered upstream, while all computational modeling, deep learning kinetics, and statistical transition analyses are 100% open, reproducible, and verifiable by the community.*
+
+---
+
+## 6. Credits & Open-Source Attributions
 
 * **Architecture, Deep Learning & Multi-Omics Integration:** Maxence Tricaud.
 * **Third-Party Dependency (Bio-Formats):** Uses the Bio-Formats Java library, developed by the Open Microscopy Environment (OME) and distributed under the **GNU General Public License (GPL) v2 or later**. Bio-Formats is not tracked or bundled in this repository; it is dynamically downloaded to `lib/` during environment setup.
@@ -113,6 +129,6 @@ shiny::runApp("visualizers/ntracks_morphomics_app.R")
 
 ---
 
-## 6. License
+## 7. License
 
 Distributed under the **MIT License**. Copyright (c) 2025-2026 Maxence Tricaud. See `LICENSE` for details.
