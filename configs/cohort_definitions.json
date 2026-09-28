@@ -1,0 +1,36 @@
+{
+  "behavioral_states": {
+    "B1": {
+      "name": "Sessile / Spherical",
+      "color": "#E8E654",
+      "description": "Resting, unpolarized, spherical cells with minimal displacement."
+    },
+    "B2": {
+      "name": "Confined / Erratic",
+      "color": "#5EC468",
+      "description": "Localized tumbling and searching within confined 3D microenvironments."
+    },
+    "B3": {
+      "name": "Directional / Migratory",
+      "color": "#C780CF",
+      "description": "Hyper-kinetic, elongated front-to-back polarity with rapid directional translocation."
+    },
+    "B4": {
+      "name": "Flattened / Dynamic",
+      "color": "#DB5390",
+      "description": "Dynamic deformation, oblate flattening, and crawling along surfaces."
+    },
+    "B5": {
+      "name": "Adherent / Oscillatory",
+      "color": "#5DACF5",
+      "description": "Volumetric expansion (swelling), firm adhesion, high contact area, and localized membrane oscillation."
+    }
+  },
+  "clinical_categories": [
+    "Healthy_Untreated",
+    "Healthy_Treated",
+    "Healthy_Treated_Recovery",
+    "Clinical_Patient",
+    "Clinical_Patient_Treatment_Recovery"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "k_vol": 1.10722,
+  "k_vel": 1.288988,
+  "k_sph": 1.004726,
+  "segment_threshold_multiplier": 3.5,
+  "min_volume": 90.0,
+  "max_volume": 1326.0,
+  "min_sphericity": 0.57,
+  "min_voxel_count": 50,
+  "cost_of_non_assign": 20.0,
+  "default_channel": 1
+}
