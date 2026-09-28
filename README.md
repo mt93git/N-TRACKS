@@ -100,6 +100,8 @@ Rscript r_markov/markov_transition_cohort_analysis.R
 ```R
 # In R or RStudio:
 source("install_ntracks_env.R")
+shiny::runApp("src/r_integration/ntracks_morphomics_app.R")
+# (or via the visualizers convenience launcher):
 shiny::runApp("visualizers/ntracks_morphomics_app.R")
 ```
 
