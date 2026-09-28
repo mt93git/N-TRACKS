@@ -7,10 +7,21 @@ function run_BATCH_workflow_v2()
     % --- Auto-load local Bio-Formats library ---
     persistent bioformats_loaded_batch;
     if isempty(bioformats_loaded_batch)
-        fprintf('Loading local Bio-Formats library...');
+        fprintf('Loading Bio-Formats library...');
         script_path = fileparts(mfilename('fullpath'));
-        jar_path = fullfile(script_path, 'lib', 'bioformats_package.jar');
-        if ~isfile(jar_path), error('CRITICAL: bioformats_package.jar not found in %s', fullfile(script_path, 'lib')); end
+        repo_root = fileparts(fileparts(fileparts(script_path)));
+        jar_path = fullfile(repo_root, 'lib', 'bioformats_package.jar');
+        if ~isfile(jar_path)
+            fprintf('\n   Bio-Formats jar not found locally. Downloading from Open Microscopy Environment...\n');
+            lib_dir = fullfile(repo_root, 'lib');
+            if ~exist(lib_dir, 'dir'), mkdir(lib_dir); end
+            try
+                websave(jar_path, 'https://downloads.openmicroscopy.org/bio-formats/7.0.0/artifacts/bioformats_package.jar');
+                fprintf('   Successfully downloaded Bio-Formats bridge.\n');
+            catch ME
+                error('CRITICAL: bioformats_package.jar not found in %s. Please run install_ntracks_env.R to download it.', lib_dir);
+            end
+        end
         if ~ismember(jar_path, javaclasspath('-dynamic')), javaaddpath(jar_path); fprintf(' Done.\n');
         else, fprintf(' Already loaded.\n'); end
         bioformats_loaded_batch = true;

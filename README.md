@@ -8,7 +8,7 @@
 **Neutrophil Tracking & Recognition Analysis of Cell Kinetics & Shape**
 
 > A hybrid computational framework engineered to bridge multi-terabyte 3D/4D confocal live-cell imaging and single-cell phenotypic profiling.  
-> Developed by **Maxence Tricaud** (Libreros Lab — Yale University / Université Laval).
+> Developed by **Maxence Tricaud**.
 
 ---
 
@@ -41,8 +41,8 @@ N-TRACKS/
 │   └── output_examples/
 │       └── MASTER_Stitched_Harmonized_Sepsis_ACME.csv # Curated benchmark track dataset
 ├── lib/
-│   └── bioformats_package.jar           # Dynamic Java bridge for Nikon ND2 microscopy
-├── install_ntracks_env.R                # Automated R dependency installer
+│   └── (bioformats_package.jar)         # Dynamic Java bridge (auto-downloaded during setup)
+├── install_ntracks_env.R                # Automated R dependency installer & Bio-Formats fetcher
 ├── LICENSE                              # MIT Open-Source License
 └── README.md
 ```
@@ -92,11 +92,13 @@ shiny::runApp("src/r_integration/ntracks_morphometric_profiler.R")
 
 ## 5. Credits & Attribution
 
-* **v2.0 Integration & Multi-Omics Architecture:** Maxence Tricaud (Yale University / Université Laval).
+* **v2.0 Integration & Multi-Omics Architecture:** Maxence Tricaud.
 * **Foundational Tracking Engine:** Derived and evolved from the ACME core framework ([Palomino et al.](https://github.com/miguel55/ACME)), substantially refactored for automated HPC batch execution, dynamic Bio-Formats self-loading, interactive QC GUI, and R phenotypic harmonization.
 
 ---
 
-## 6. License
+## 6. License & Open-Source Attributions
 
-Distributed under the **MIT License**. See `LICENSE` for full details.
+* **N-TRACKS Core Framework:** Distributed under the **MIT License**. Copyright (c) 2025-2026 Maxence Tricaud. See `LICENSE` for full details.
+* **Third-Party Dependency (Bio-Formats):** Uses the Bio-Formats Java library, developed by the Open Microscopy Environment (OME) and distributed under the **GNU General Public License (GPL) v2 or later**. Bio-Formats is not tracked or bundled in this repository; it is dynamically downloaded to `lib/` during environment setup.
+* **Foundational Tracking Algorithm:** Tracking core derived from the ACME framework ([Palomino et al.](https://github.com/miguel55/ACME)).
