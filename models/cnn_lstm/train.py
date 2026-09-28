@@ -14,9 +14,15 @@ import argparse
 import torch
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
+import sys
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
 
-from .architecture import SpatiotemporalCNNLSTM, MorphokineticLoss
-
+try:
+    from .architecture import SpatiotemporalCNNLSTM, MorphokineticLoss
+except (ImportError, ValueError):
+    from architecture import SpatiotemporalCNNLSTM, MorphokineticLoss
 
 class Synthetic4DTrackDataset(Dataset):
     """Synthetic dataset simulating 4D leukocyte volumetric time-series for model verification."""

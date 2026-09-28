@@ -16,9 +16,14 @@ import argparse
 import numpy as np
 import pandas as pd
 import torch
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
 
-from .architecture import SpatiotemporalCNNLSTM
-
+try:
+    from .architecture import SpatiotemporalCNNLSTM
+except (ImportError, ValueError):
+    from architecture import SpatiotemporalCNNLSTM
 
 STATE_NAMES = [
     "Stationary_Arrested",
